@@ -5,20 +5,15 @@ namespace WeatherApi.API.Middleware;
 public class ApiKeyMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IApiKeyValidationService _apiKeyValidationService;
     private readonly ILogger<ApiKeyMiddleware> _logger;
 
-    public ApiKeyMiddleware(
-        RequestDelegate next, 
-        IApiKeyValidationService apiKeyValidationService,
-        ILogger<ApiKeyMiddleware> logger)
+    public ApiKeyMiddleware(RequestDelegate next, ILogger<ApiKeyMiddleware> logger)
     {
         _next = next;
-        _apiKeyValidationService = apiKeyValidationService;
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, IApiKeyValidationService apiKeyValidationService)
     {
         // Skip API key validation for non-API endpoints
         if (!context.Request.Path.StartsWithSegments("/api"))
@@ -46,7 +41,7 @@ public class ApiKeyMiddleware
         }
 
         // Validate API key
-        var isValid = await _apiKeyValidationService.ValidateApiKeyAsync(apiKey);
+        var isValid = await apiKeyValidationService.ValidateApiKeyAsync(apiKey);
         if (!isValid)
         {
             _logger.LogWarning("Invalid API key provided: {ApiKey}", apiKey);

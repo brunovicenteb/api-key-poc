@@ -23,8 +23,8 @@ public class WeatherController : ControllerBase
     /// <returns>Weather information for the specified city</returns>
     [HttpGet]
     public async Task<ActionResult<WeatherResponse>> GetWeather(
-        [FromQuery] string city, 
-        CancellationToken cancellationToken)
+        [FromHeader(Name = "x-api-key")] string apiKey, 
+        [FromQuery] string city, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(city))
         {
@@ -32,7 +32,7 @@ public class WeatherController : ControllerBase
         }
 
         var weatherData = await _weatherService.GetWeatherAsync(city, cancellationToken);
-        
+
         if (weatherData == null)
         {
             return NotFound($"Weather data not found for city: {city}");
