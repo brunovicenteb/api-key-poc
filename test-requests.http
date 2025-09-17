@@ -1,0 +1,26 @@
+### Test Weather API with valid API key
+GET https://localhost:7123/api/weather?city=London
+x-api-key: test-key-123
+
+### Test Weather API with another city
+GET https://localhost:7123/api/weather?city=Paris
+x-api-key: test-key-456
+
+### Test Weather API without API key (should fail)
+GET https://localhost:7123/api/weather?city=London
+
+### Test Weather API with invalid API key (should fail)
+GET https://localhost:7123/api/weather?city=London
+x-api-key: invalid-key
+
+### Test Weather API with expired API key (should fail)
+GET https://localhost:7123/api/weather?city=London
+x-api-key: expired-key-789
+
+### Test Weather API with inactive API key (should fail)
+GET https://localhost:7123/api/weather?city=London
+x-api-key: inactive-key-000
+
+### Test Weather API without city parameter (should fail)
+GET https://localhost:7123/api/weather
+x-api-key: test-key-123
